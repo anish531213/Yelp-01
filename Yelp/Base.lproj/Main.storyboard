@@ -119,17 +119,24 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="9fC-2q-iOe">
+                                <rect key="frame" x="177" y="323" width="20" height="20"/>
+                                <color key="color" cocoaTouchSystemColor="darkTextColor"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="VBY-gq-v8E" firstAttribute="top" secondItem="0hD-Jw-pI0" secondAttribute="bottom" id="3OJ-LL-seU"/>
                             <constraint firstItem="0hD-Jw-pI0" firstAttribute="top" secondItem="XhR-oz-92f" secondAttribute="top" id="Lhs-6M-yVh"/>
                             <constraint firstItem="0hD-Jw-pI0" firstAttribute="leading" secondItem="XhR-oz-92f" secondAttribute="leading" id="RpY-le-SNR"/>
+                            <constraint firstItem="9fC-2q-iOe" firstAttribute="centerX" secondItem="XhR-oz-92f" secondAttribute="centerX" id="Uz3-vV-2g4"/>
                             <constraint firstAttribute="trailing" secondItem="0hD-Jw-pI0" secondAttribute="trailing" id="pYE-fI-Mjn"/>
+                            <constraint firstItem="9fC-2q-iOe" firstAttribute="centerY" secondItem="XhR-oz-92f" secondAttribute="centerY" id="pa2-jL-LPP"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Yelp" id="Qfi-ho-QnX"/>
                     <connections>
+                        <outlet property="myActivityIndicator" destination="9fC-2q-iOe" id="zuJ-N3-egC"/>
                         <outlet property="tableView" destination="0hD-Jw-pI0" id="3fk-PA-fjl"/>
                     </connections>
                 </viewController>

@@ -16,6 +16,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     let searchBar: UISearchBar = UISearchBar()
     @IBOutlet weak var tableView: UITableView!
     
+    @IBOutlet weak var myActivityIndicator: UIActivityIndicatorView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -44,6 +46,8 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     }
     
     func searchBusinessesWithTerm(text: String) {
+        myActivityIndicator.startAnimating()
+        myActivityIndicator.hidesWhenStopped = true
         Business.searchWithTerm(term: text, completion: { (businesses: [Business]?, error: Error?) -> Void in
             
             self.businesses = businesses
@@ -58,9 +62,11 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
                 self.default_businesses = businesses
             }
             self.searchBar.resignFirstResponder()
+            self.myActivityIndicator.stopAnimating()
         }
             
         )
+       
     }
     
     override func didReceiveMemoryWarning() {
@@ -85,6 +91,7 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
+        print("editiong")
         searchBar.becomeFirstResponder()
     }
     
