@@ -8,26 +8,28 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     
     var businesses: [Business]!
+    var default_businesses: [Business]!
+    
+    let searchBar: UISearchBar = UISearchBar()
+    @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        searchBar.sizeToFit()
+        searchBar.placeholder = "e.g. resturants, thai"
+        navigationItem.titleView = searchBar
         
-        Business.searchWithTerm(term: "Thai", completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
-            self.businesses = businesses
-            if let businesses = businesses {
-                for business in businesses {
-                    print(business.name!)
-                    print(business.address!)
-                }
-            }
-            
-            }
-        )
+        searchBar.delegate = self
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.estimatedRowHeight = 85
         
+        searchBusinessesWithTerm(text: "Thai")
         /* Example of Yelp search with more search options specified
          Business.searchWithTerm("Restaurants", sort: .distance, categories: ["asianfusion", "burgers"], deals: true) { (businesses: [Business]!, error: Error!) -> Void in
          self.businesses = businesses
@@ -41,9 +43,66 @@ class BusinessesViewController: UIViewController {
         
     }
     
+    func searchBusinessesWithTerm(text: String) {
+        Business.searchWithTerm(term: text, completion: { (businesses: [Business]?, error: Error?) -> Void in
+            
+            self.businesses = businesses
+            self.tableView.reloadData()
+            if let businesses = businesses {
+                for business in businesses {
+                    print(business.name!)
+                    print(business.address!)
+                }
+            }
+            if text == "Thai" {
+                self.default_businesses = businesses
+            }
+            self.searchBar.resignFirstResponder()
+        }
+            
+        )
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if businesses != nil {
+            return businesses!.count
+        } else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
+        cell.business = businesses[indexPath.row]
+        
+        return cell
+    }
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(true, animated: true)
+        searchBar.becomeFirstResponder()
+    }
+    
+    
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        //searchBar.showsCancelButton = false
+        searchBar.text = ""
+        searchBar.resignFirstResponder()
+        businesses = default_businesses
+        tableView.reloadData()
+        
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.setShowsCancelButton(false, animated: true)
+        searchBusinessesWithTerm(text: searchBar.text!)
     }
     
     /*
