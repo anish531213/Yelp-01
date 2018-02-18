@@ -8,10 +8,13 @@
 
 import UIKit
 
-class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
+class BusinessesViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, UIScrollViewDelegate {
     
     var businesses: [Business]!
     var default_businesses: [Business]!
+    var isLoadingMoreData = false
+    var loadingMoreView: InfiniteScrollActivityView?
+    var searchText = ""
     
     let searchBar: UISearchBar = UISearchBar()
     @IBOutlet weak var tableView: UITableView!
@@ -20,6 +23,16 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Set up Infinite Scroll loading indicator
+        let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+        loadingMoreView = InfiniteScrollActivityView(frame: frame)
+        loadingMoreView!.isHidden = true
+        tableView.addSubview(loadingMoreView!)
+        
+        var insets = tableView.contentInset
+        insets.bottom += InfiniteScrollActivityView.defaultHeight
+        tableView.contentInset = insets
        
         searchBar.sizeToFit()
         searchBar.placeholder = "e.g. resturants, thai"
@@ -42,14 +55,12 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
          }
          }
          */
-        
     }
     
     func searchBusinessesWithTerm(text: String) {
         myActivityIndicator.startAnimating()
         myActivityIndicator.hidesWhenStopped = true
         Business.searchWithTerm(term: text, completion: { (businesses: [Business]?, error: Error?) -> Void in
-            
             self.businesses = businesses
             self.tableView.reloadData()
             if let businesses = businesses {
@@ -91,7 +102,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
-        print("editiong")
         searchBar.becomeFirstResponder()
     }
     
@@ -110,6 +120,51 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(false, animated: true)
         searchBusinessesWithTerm(text: searchBar.text!)
+        searchText = searchBar.text!
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (!isLoadingMoreData) {
+            // Calculate the position of one screen length before the bottom of the results
+            let scrollViewContentHeight = tableView.contentSize.height
+            let scrollOffsetThreshold = scrollViewContentHeight - tableView.bounds.size.height
+            
+            if(scrollView.contentOffset.y > scrollOffsetThreshold && tableView.isDragging) {
+                isLoadingMoreData = true
+                print("scrolled")
+                // Update position of loadingMoreView, and start loading indicator
+                let frame = CGRect(x: 0, y: tableView.contentSize.height, width: tableView.bounds.size.width, height: InfiniteScrollActivityView.defaultHeight)
+                loadingMoreView?.frame = frame
+                loadingMoreView!.startAnimating()
+                
+                // ... Code to load more results ...
+                loadMoreData()
+            }
+            
+        }
+    }
+    
+    func loadMoreData() {
+        let business_size = self.businesses.count
+        Business.searchWithTerm(term: searchText, sort: nil, categories: nil, deals: nil, offset:business_size, completion: { (businesses: [Business]?, error: Error?) -> Void in
+           
+            self.businesses = self.businesses!+businesses!
+            self.isLoadingMoreData = false
+            self.loadingMoreView!.stopAnimating()
+            
+            self.tableView.reloadData()
+            if let businesses = businesses {
+                for business in businesses {
+                    print(business.name!)
+                    print(business.address!)
+                }
+            }
+            
+            self.searchBar.resignFirstResponder()
+            self.myActivityIndicator.stopAnimating()
+        }
+            
+        )
     }
     
     /*
