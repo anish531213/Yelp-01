@@ -1,8 +1,8 @@
-# Project 3 - *Name of App Here*
+# Project 3 - *yelp01*
 
-**Name of your app** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
+**yelp01** is a Yelp search app using the [Yelp API](http://www.yelp.com/developers/documentation/v2/search_api).
 
-Time spent: **X** hours spent in total
+Time spent: **4** hours spent in total
 
 ## User Stories
 
@@ -14,9 +14,9 @@ The following **required** functionality is completed:
 
 The following **stretch** features are implemented:
 
-- [ ] Infinite scroll for restaurant results. (+3pt)
+- [x] Infinite scroll for restaurant results. (+3pt)
 - [ ] Implement map view of restaurant results. (+3pt)
-- [ ] Implement the restaurant detail page. (+2pt)
+- [x] Implement the restaurant detail page. (+2pt)
 
 The following **additional** features are implemented:
 
@@ -25,24 +25,24 @@ The following **additional** features are implemented:
 
 Please list two areas of the assignment you'd like to **discuss further with your peers** during the next class (examples include better ways to implement something, how to extend your app in certain ways, etc):
 
-1.
-2.
+1. Good detail view for the resturants.
+2. Change the model to get nearby resturants by current location.
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://i.imgur.com/AGPso3f.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+Autolayout issues and using model while building detail view.
 
 ## License
 
-Copyright [yyyy] [name of copyright owner]
+Copyright [2018] [Anish Adhikari]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
