@@ -96,7 +96,6 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "BusinessCell", for: indexPath) as! BusinessCell
         cell.business = businesses[indexPath.row]
-        
         return cell
     }
     
@@ -165,6 +164,18 @@ class BusinessesViewController: UIViewController, UITableViewDataSource, UITable
         }
             
         )
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let cell = sender as! UITableViewCell
+        if let indexPath = tableView.indexPath(for: cell) {
+            let userVC = segue.destination as! DetailViewController
+            //print(business.name)
+            //print(self.businesses[indexPath.row].address)
+            userVC.data = businesses[indexPath.row]
+            
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
     }
     
     /*
